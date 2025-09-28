@@ -3,12 +3,17 @@
 import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
 import { ShoppingCart, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Header() {
   const { getItemCount } = useCartStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const itemCount = getItemCount();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -48,7 +53,7 @@ export default function Header() {
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors">
               <ShoppingCart className="w-6 h-6" />
-              {itemCount > 0 && (
+              {isHydrated && itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {itemCount}
                 </span>

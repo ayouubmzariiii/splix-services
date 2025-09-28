@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -25,7 +25,7 @@ const checkoutSchema = z.object({
 type CheckoutForm = z.infer<typeof checkoutSchema>;
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCartStore();
+  const { items, total, clearCart, hasHotDealCombo, getHotDealDiscount, getDiscountedTotal } = useCartStore();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -37,10 +37,27 @@ export default function CheckoutPage() {
     resolver: zodResolver(checkoutSchema),
   });
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty - use useEffect to avoid render issues
+  React.useEffect(() => {
+    if (items.length === 0) {
+      router.push('/cart');
+    }
+  }, [items.length, router]);
+
+  // Show loading while redirecting
   if (items.length === 0) {
-    router.push('/cart');
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-16">
+            <div className="animate-pulse">
+              <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-6"></div>
+              <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const onSubmit = async (data: CheckoutForm) => {
@@ -278,7 +295,7 @@ export default function CheckoutPage() {
                 ) : (
                   <>
                     <Lock className="w-5 h-5 mr-2" />
-                    Complete Order - ${total.toFixed(2)}
+                    Complete Order - ${total.toFixed(2)}/year
                   </>
                 )}
               </button>
@@ -308,11 +325,11 @@ export default function CheckoutPage() {
                                 <div className="text-lg hidden">🔧</div>
                               </div>
                   <div className="flex-1">
-                    <h3 className="font-medium text-gray-900">{item.service.name}</h3>
-                    <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                    <h3 className="font-semibold text-gray-900">{item.service.name}</h3>
+                    <p className="text-sm text-gray-700 font-medium">Quantity: {item.quantity}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium">${(item.service.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-semibold text-gray-900">${(item.service.price * item.quantity).toFixed(2)}/year</p>
                   </div>
                 </div>
               ))}
@@ -320,16 +337,24 @@ export default function CheckoutPage() {
 
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-600">Subtotal</span>
-                <span className="font-medium">${total.toFixed(2)}</span>
+                <span className="text-gray-900 font-medium">Subtotal</span>
+                <span className="font-semibold text-gray-900">${total.toFixed(2)}/year</span>
               </div>
+              
+              {hasHotDealCombo() && (
+                <div className="flex justify-between items-center mb-2 text-orange-600">
+                  <span className="font-medium">Hot Deal Discount</span>
+                  <span className="font-semibold">-${getHotDealDiscount().toFixed(2)}</span>
+                </div>
+              )}
+              
               <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-600">Processing Fee</span>
-                <span className="font-medium">$0.00</span>
+                <span className="text-gray-900 font-medium">Processing Fee</span>
+                <span className="font-semibold text-gray-900">$0.00</span>
               </div>
-              <div className="flex justify-between items-center text-lg font-bold">
+              <div className="flex justify-between items-center text-lg font-bold text-gray-900">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>${getDiscountedTotal().toFixed(2)}/year</span>
               </div>
             </div>
 
