@@ -3,6 +3,7 @@
 import { Service } from '@/types';
 import { useCartStore } from '@/store/cartStore';
 import { ShoppingCart, Star } from 'lucide-react';
+import Image from 'next/image';
 
 interface ServiceCardProps {
   service: Service;
@@ -30,11 +31,12 @@ export default function ServiceCard({ service }: ServiceCardProps) {
 
       {/* Service Logo */}
       <div className="flex justify-center mb-4">
-        <div className="w-16 h-16">
-          <img 
+        <div className="w-16 h-16 relative">
+          <Image 
             src={service.icon} 
             alt={`${service.name} logo`}
-            className="w-full h-full object-contain"
+            fill
+            className="object-contain"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
               const nextElement = e.currentTarget.nextElementSibling as HTMLElement;

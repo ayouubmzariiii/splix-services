@@ -4,7 +4,6 @@ import ServiceCard from '@/components/ServiceCard';
 import { ArrowRight, Shield, Clock, Headphones, Star } from 'lucide-react';
 
 export default function Home() {
-  const popularServices = services.filter(service => service.popular);
 
   return (
     <div className="min-h-screen">

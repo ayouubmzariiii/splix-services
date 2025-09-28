@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Service, CartItem, Cart } from '@/types';
+import { Service, Cart } from '@/types';
 
 interface CartStore extends Cart {
   addItem: (service: Service) => void;
