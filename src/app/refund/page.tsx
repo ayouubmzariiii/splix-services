@@ -63,8 +63,8 @@ export default function RefundPolicy() {
         <div className="bg-blue-50 rounded-lg p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">30-Day Money-Back Guarantee</h2>
           <p className="text-gray-700 text-lg">
-            We stand behind our services with a 30-day money-back guarantee. If you're not satisfied 
-            with your purchase, we'll work with you to make it right or provide a full refund.
+            We stand behind our services with a 30-day money-back guarantee. If you&apos;re not satisfied 
+            with your purchase, we&apos;ll work with you to make it right or provide a full refund.
           </p>
         </div>
 
@@ -158,7 +158,7 @@ export default function RefundPolicy() {
         <div className="bg-blue-50 rounded-lg p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Need to Request a Refund?</h2>
           <p className="text-gray-600 mb-6">
-            Our support team is here to help. Contact us with your order details and we'll 
+            Our support team is here to help. Contact us with your order details and we&apos;ll 
             process your request as quickly as possible.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

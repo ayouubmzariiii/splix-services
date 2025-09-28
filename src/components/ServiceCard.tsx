@@ -37,7 +37,10 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             className="w-full h-full object-contain"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling!.style.display = 'block';
+              const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+              if (nextElement) {
+                nextElement.style.display = 'block';
+              }
             }}
           />
           <div className="text-2xl hidden flex items-center justify-center w-full h-full">🔧</div>

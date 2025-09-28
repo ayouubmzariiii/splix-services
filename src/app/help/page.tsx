@@ -135,7 +135,7 @@ export default function HelpCenter() {
         <div className="bg-blue-50 rounded-lg p-8 text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Still Need Help?</h2>
           <p className="text-gray-600 mb-6">
-            Can't find what you're looking for? Our support team is here to help 24/7.
+            Can&apos;t find what you&apos;re looking for? Our support team is here to help 24/7.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

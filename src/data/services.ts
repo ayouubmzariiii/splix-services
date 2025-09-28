@@ -54,7 +54,7 @@ export const services: Service[] = [
     features: ['Photoshop', 'Illustrator', 'Premiere Pro', 'Cloud storage']
   },
   {
-    id: 6,
+    id: "6",
     name: "Microsoft Office 365",
     description: "Word, Excel & PowerPoint suite",
     price: 4.99,
@@ -62,9 +62,7 @@ export const services: Service[] = [
     icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iMTAiIGZpbGw9IiNGRjZEMDAiLz4KPHN2ZyB4PSIxNSIgeT0iMTUiIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgdmlld0JveD0iMCAwIDcwIDcwIiBmaWxsPSJub25lIj4KPHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjRkY2RDAwIi8+CjxyZWN0IHg9IjM1IiB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIGZpbGw9IiMwMDc4RDQiLz4KPHJlY3QgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iIzAwQkM2QyIvPgo8cmVjdCB4PSIzNSIgeT0iMzUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iI0ZGQjkwMCIvPgo8L3N2Zz4KPC9zdmc+",
     category: "Productivity",
     features: ["Word", "Excel", "PowerPoint", "OneDrive storage"],
-    popular: false,
-    rating: 4.4,
-    reviews: 1800
+    popular: false
   },
   {
     id: '7',
@@ -77,7 +75,7 @@ export const services: Service[] = [
     features: ['Free shipping', 'Prime Video', 'Prime Music', 'Exclusive deals']
   },
   {
-    id: 8,
+    id: "8",
     name: "Canva Pro",
     description: "Design tools & premium templates",
     price: 3.99,
@@ -85,12 +83,10 @@ export const services: Service[] = [
     icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iMTAiIGZpbGw9IiMwMEMzRjciLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIiBmaWxsPSJub25lIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMjUiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yMCAzMEMyMCAyNCAyNCAyMCAzMCAyMFM0MCAyNCA0MCAzMFMzNiA0MCAzMCA0MFMyMCAzNiAyMCAzMFoiIGZpbGw9IiMwMEMzRjciLz4KPC9zdmc+Cjwvc3ZnPg==",
     category: "Design",
     features: ["Premium templates", "Brand kit", "Background remover", "Team collaboration"],
-    popular: false,
-    rating: 4.7,
-    reviews: 1100
+    popular: false
   },
   {
-    id: 9,
+    id: "9",
     name: "Grammarly Premium",
     description: "AI writing assistant & grammar checker",
     price: 5.99,
@@ -98,8 +94,6 @@ export const services: Service[] = [
     icon: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiByeD0iMTAiIGZpbGw9IiMxNUMzOUEiLz4KPHN2ZyB4PSIyMCIgeT0iMjAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIiBmaWxsPSJub25lIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMjUiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yNSAyNUgzNVYzNUgyNVYyNVoiIGZpbGw9IiMxNUMzOUEiLz4KPHBhdGggZD0iTTIwIDQwSDQwVjQ1SDIwVjQwWiIgZmlsbD0iIzE1QzM5QSIvPgo8L3N2Zz4KPC9zdmc+",
     category: "Productivity",
     features: ["Grammar check", "Style suggestions", "Plagiarism detection", "Tone detector"],
-    popular: false,
-    rating: 4.5,
-    reviews: 680
+    popular: false
   }
 ];

@@ -28,7 +28,7 @@ export default function CheckoutSuccessPage() {
                 <div>
                   <h3 className="font-medium text-gray-900">Email Confirmation</h3>
                   <p className="text-sm text-gray-600">
-                    You'll receive an email confirmation with your order details and service access information.
+                    You&apos;ll receive an email confirmation with your order details and service access information.
                   </p>
                 </div>
               </div>
@@ -79,7 +79,7 @@ export default function CheckoutSuccessPage() {
             <p className="text-sm text-gray-500">
               Order confirmation and service details have been sent to your email address.
               <br />
-              If you don't receive it within 10 minutes, please check your spam folder.
+              If you don&apos;t receive it within 10 minutes, please check your spam folder.
             </p>
           </div>
         </div>

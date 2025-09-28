@@ -119,7 +119,7 @@ export default function PrivacyPolicy() {
               practices of these third parties. We encourage you to read their privacy policies.
             </p>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Children's Privacy</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Children&apos;s Privacy</h2>
             <p className="text-gray-700 mb-6">
               Our services are not intended for children under 18. We do not knowingly collect personal information from 
               children under 18. If you become aware that a child has provided us with personal information, please contact us.
@@ -128,7 +128,7 @@ export default function PrivacyPolicy() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Changes to This Policy</h2>
             <p className="text-gray-700 mb-6">
               We may update this privacy policy from time to time. We will notify you of any changes by posting the new 
-              privacy policy on this page and updating the "Last updated" date.
+              privacy policy on this page and updating the &quot;Last updated&quot; date.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Contact Us</h2>
@@ -164,8 +164,8 @@ export default function PrivacyPolicy() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Questions About Your Privacy?</h2>
           <p className="text-gray-600 mb-6">
-            We're committed to protecting your privacy. If you have any questions or concerns, 
-            don't hesitate to reach out to our privacy team.
+            We&apos;re committed to protecting your privacy. If you have any questions or concerns, 
+            don&apos;t hesitate to reach out to our privacy team.
           </p>
           <Link
             href="/contact"

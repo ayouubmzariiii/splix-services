@@ -299,7 +299,10 @@ export default function CheckoutPage() {
                                   className="w-full h-full object-contain"
                                   onError={(e) => {
                                     e.currentTarget.style.display = 'none';
-                                    e.currentTarget.nextElementSibling!.style.display = 'block';
+                                    const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                                    if (nextElement) {
+                                      nextElement.style.display = 'block';
+                                    }
                                   }}
                                 />
                                 <div className="text-lg hidden">🔧</div>

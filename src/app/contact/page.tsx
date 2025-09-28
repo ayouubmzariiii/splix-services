@@ -51,7 +51,7 @@ export default function ContactPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Have questions about our services? We're here to help. Get in touch with our support team.
+            Have questions about our services? We&apos;re here to help. Get in touch with our support team.
           </p>
         </div>
 
@@ -67,7 +67,7 @@ export default function ContactPage() {
                   <div>
                     <h3 className="font-medium text-gray-900">Email</h3>
                     <p className="text-gray-600">support@splixservices.com</p>
-                    <p className="text-sm text-gray-500">We'll respond within 24 hours</p>
+                    <p className="text-sm text-gray-500">We&apos;ll respond within 24 hours</p>
                   </div>
                 </div>
 
@@ -138,7 +138,7 @@ export default function ContactPage() {
                     </div>
                     <div className="ml-3">
                       <p className="text-sm font-medium text-green-800">
-                        Message sent successfully! We'll get back to you soon.
+                        Message sent successfully! We&apos;ll get back to you soon.
                       </p>
                     </div>
                   </div>

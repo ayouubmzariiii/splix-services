@@ -220,7 +220,7 @@ export default function ReviewsPage() {
                 Share Your Experience
               </h2>
               <p className="text-gray-600 mb-6">
-                Have you used our services? We'd love to hear about your experience!
+                Have you used our services? We&apos;d love to hear about your experience!
               </p>
               <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
                 Write a Review

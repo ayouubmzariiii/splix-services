@@ -15,7 +15,7 @@ export default function CartPage() {
             <ShoppingBag className="w-24 h-24 text-gray-300 mx-auto mb-6" />
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
             <p className="text-lg text-gray-600 mb-8">
-              Looks like you haven't added any services to your cart yet
+              Looks like you haven&apos;t added any services to your cart yet
             </p>
             <Link
               href="/services"
@@ -59,7 +59,10 @@ export default function CartPage() {
                         className="w-full h-full object-contain"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
-                          e.currentTarget.nextElementSibling!.style.display = 'block';
+                          const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                          if (nextElement) {
+                            nextElement.style.display = 'block';
+                          }
                         }}
                       />
                       <div className="text-2xl hidden">🔧</div>
