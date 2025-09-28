@@ -15,7 +15,7 @@ export default function FloatingHotDealsButton({ onClick }: FloatingHotDealsButt
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-6 right-6 z-40 group"
+      className="fixed bottom-6 right-20 z-40 group"
     >
       {/* Main Button */}
       <div className="relative">

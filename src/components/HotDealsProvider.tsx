@@ -29,20 +29,12 @@ export default function HotDealsProvider({ children }: HotDealsProviderProps) {
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
-    // Check if modal has been shown in this session
-    const hasShownModal = sessionStorage.getItem('hotDealsShown');
-    
-    if (!hasShownModal) {
-      // Show floating button after 3 seconds
-      const buttonTimer = setTimeout(() => {
-        setShowButton(true);
-      }, 3000);
-
-      return () => clearTimeout(buttonTimer);
-    } else {
-      // If modal was already shown, show button immediately
+    // Always show the floating button after 3 seconds
+    const buttonTimer = setTimeout(() => {
       setShowButton(true);
-    }
+    }, 3000);
+
+    return () => clearTimeout(buttonTimer);
   }, []);
 
   const showModal = () => {
