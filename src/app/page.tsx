@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { services } from '@/data/services';
 import ServiceCard from '@/components/ServiceCard';
 import { ArrowRight, Shield, Clock, Headphones, Star } from 'lucide-react';
 
@@ -56,7 +55,7 @@ export default function Home() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Splix Services?</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Passify?</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               We provide legitimate, high-quality access to premium services with unmatched support
             </p>

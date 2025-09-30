@@ -15,7 +15,7 @@ export default function FloatingHotDealsButton({ onClick }: FloatingHotDealsButt
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed bottom-6 right-20 z-40 group"
+      className="fixed bottom-6 right-4 sm:right-20 z-40 group"
     >
       {/* Main Button */}
       <div className="relative">
@@ -23,11 +23,11 @@ export default function FloatingHotDealsButton({ onClick }: FloatingHotDealsButt
         <div className="absolute inset-0 bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 rounded-full blur-lg opacity-75 animate-pulse group-hover:opacity-100 transition-opacity duration-300"></div>
         
         {/* Button Content */}
-        <div className="relative bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 rounded-full p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110">
-          <div className="flex items-center space-x-2 text-white">
-            <Flame className="w-6 h-6 animate-bounce" />
-            <span className="font-bold text-sm whitespace-nowrap">HOT DEALS</span>
-            <Sparkles className="w-5 h-5 animate-pulse" />
+        <div className="relative bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 rounded-full p-3 sm:p-4 shadow-2xl transform transition-all duration-300 group-hover:scale-110">
+          <div className="flex items-center space-x-1 sm:space-x-2 text-white">
+            <Flame className="w-4 h-4 sm:w-6 sm:h-6 animate-bounce" />
+            <span className="font-bold text-xs sm:text-sm whitespace-nowrap">HOT DEALS</span>
+            <Sparkles className="w-3 h-3 sm:w-5 sm:h-5 animate-pulse" />
           </div>
         </div>
 

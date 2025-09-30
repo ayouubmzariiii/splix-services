@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Service, Cart } from '@/types';
-import servicesConfig from '@/config/services-config.json';
 
 interface CartItem {
   service: Service;

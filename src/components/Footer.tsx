@@ -11,7 +11,7 @@ export default function Footer() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">S</span>
               </div>
-              <span className="text-xl font-bold">Splix Services</span>
+              <span className="text-xl font-bold">Passify</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
               Your trusted source for premium digital services at unbeatable prices. 
@@ -86,8 +86,8 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400">
-            © 2025 Splix Services. All rights reserved.
+          <p className="text-center text-gray-400">
+            © 2025 Passify. All rights reserved.
           </p>
         </div>
       </div>

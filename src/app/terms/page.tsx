@@ -16,14 +16,14 @@ export default function TermsOfService() {
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="prose prose-lg max-w-none">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
-            <p className="text-gray-700 mb-6">
-              By accessing and using Splix Services, you accept and agree to be bound by the terms and provision of this agreement. 
+            <p className="text-gray-600 mb-6">
+              By accessing and using Passify, you accept and agree to be bound by the terms and provision of this agreement.
               If you do not agree to abide by the above, please do not use this service.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Service Description</h2>
-            <p className="text-gray-700 mb-6">
-              Splix Services provides access to premium digital services at discounted prices. We act as an authorized reseller 
+            <p className="text-gray-600 mb-6">
+                Passify provides access to premium digital services at discounted prices. We act as an authorized reseller 
               and provide legitimate access to various streaming, productivity, and creative platforms.
             </p>
 
@@ -62,7 +62,7 @@ export default function TermsOfService() {
 
             <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Limitation of Liability</h2>
             <p className="text-gray-700 mb-6">
-              Splix Services shall not be liable for any indirect, incidental, special, consequential, or punitive damages, 
+              Passify shall not be liable for any indirect, incidental, special, consequential, or punitive damages, 
               including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
             </p>
 

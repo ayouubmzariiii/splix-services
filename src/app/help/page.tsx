@@ -46,7 +46,7 @@ export default function HelpCenter() {
   ];
 
   const popularArticles = [
-    'How does Splix Services work?',
+    'How does Passify work?',
     'Are your services legal and safe?',
     'What is your refund policy?',
     'How long do services take to activate?',
