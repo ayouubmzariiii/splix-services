@@ -39,7 +39,7 @@ export default function BundleSection() {
             Bundle & Save – Cheap Subscriptions for Every App
           </h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-            Why stop at Spotify? Mix and match any of Passify's cheap subscriptions – from video, music to gaming, and streaming. 
+            Why stop at Spotify? Mix and match any of Passify&apos;s cheap subscriptions – from video, music to gaming, and streaming. 
             <span className="font-semibold text-blue-600"> Save up to 80% </span>
             on every service
           </p>
@@ -85,7 +85,7 @@ export default function BundleSection() {
               </div>
               <div>
                 <p className="text-gray-700">
-                  <span className="font-semibold">Add multiple services to your cart</span> – there's no limit, and each one carries its own deep discount.
+                  <span className="font-semibold">Add multiple services to your cart</span> – there&apos;s no limit, and each one carries its own deep discount.
                 </p>
               </div>
             </div>

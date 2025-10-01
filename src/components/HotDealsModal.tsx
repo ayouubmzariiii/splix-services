@@ -5,7 +5,7 @@ import { X, ChevronLeft, ChevronRight, Sparkles, Check } from 'lucide-react';
 import { useHotDealsStore } from '@/store/hotDealsStore';
 import { useCartStore } from '@/store/cartStore';
 import { getServicesData } from '@/data/services';
-import { getDealsData } from '@/data/deals';
+import { getDealsData, Deal } from '@/data/deals';
 import { Service } from '@/types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,7 @@ interface HotDealsModalProps {
 export default function HotDealsModal({ isOpen, onClose }: HotDealsModalProps) {
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
   const [services, setServices] = useState<Service[]>([]);
-  const [deals, setDeals] = useState<any[]>([]);
+  const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const { addItem } = useCartStore();
   const router = useRouter();
@@ -42,10 +42,16 @@ export default function HotDealsModal({ isOpen, onClose }: HotDealsModalProps) {
             name: 'Ultimate Streaming Bundle',
             description: 'Get Netflix, Spotify, and YouTube Premium together',
             serviceIds: ['1', '2', '4'],
-            originalPrice: 359.64,
-            dealPrice: 179.97,
-            discountPercentage: 50,
-            badge: 'BEST VALUE'
+            originalPrice: 300,
+            dealPrice: 199,
+            discountPercentage: 33,
+            badge: 'BEST VALUE',
+            promoCode: 'STREAM33',
+            features: ['Netflix Premium', 'Spotify Premium', 'YouTube Premium'],
+            priority: 1,
+            isActive: true,
+            validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+            createdAt: new Date()
           }
         ]);
       } finally {
