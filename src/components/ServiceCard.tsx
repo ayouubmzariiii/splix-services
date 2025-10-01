@@ -2,7 +2,7 @@
 
 import { Service } from '@/types';
 import { useCartStore } from '@/store/cartStore';
-import { ShoppingCart, Star, Loader2, Check } from 'lucide-react';
+import { ShoppingCart, Loader2, Check } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -36,100 +36,100 @@ export default function ServiceCard({ service }: ServiceCardProps) {
     : 0;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 p-6 h-[480px] w-full flex flex-col transform hover:-translate-y-1">
-      {/* Popular Badge - Fixed height container */}
-      <div className="h-8 mb-4 flex items-start">
-        {service.popular && (
-          <div className="inline-block bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full self-start shadow-sm">
-            ⭐ Popular
-          </div>
-        )}
+    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100 hover:border-gray-200">
+      {/* Service Icon */}
+      <div className="w-16 h-16 mx-auto mb-4 relative flex items-center justify-center bg-gray-50 rounded-xl p-2">
+        <Image 
+          src={service.icon} 
+          alt={`${service.name} logo`}
+          fill
+          className="object-contain p-2"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+            if (nextElement) {
+              nextElement.style.display = 'block';
+            }
+          }}
+        />
+        <div className="text-3xl hidden">🔧</div>
       </div>
 
-      {/* Service Logo */}
-      <div className="flex justify-center mb-6">
-        <div className="w-20 h-20 relative bg-gray-50 rounded-xl p-3 shadow-sm">
-          <Image 
-            src={service.icon} 
-            alt={`${service.name} logo`}
-            fill
-            className="object-contain p-2"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
-              if (nextElement) {
-                nextElement.style.display = 'block';
-              }
-            }}
-          />
-          <div className="text-3xl hidden flex items-center justify-center w-full h-full">🔧</div>
-        </div>
-      </div>
-
-      {/* Service Info - Fixed height container */}
-      <div className="text-center mb-6 h-24 flex flex-col justify-start">
-        <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
+      {/* Service Name */}
+      <div className="text-center mb-4">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
           {service.name}
         </h3>
-        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+        <p className="text-gray-600 text-sm">
           {service.description}
         </p>
       </div>
 
-      {/* Spacer to push pricing and button to bottom */}
-      <div className="flex-grow"></div>
-
-      {/* Pricing - Fixed height container */}
-      <div className="text-center mb-6 h-20 flex flex-col justify-center">
+      {/* Pricing */}
+      <div className="text-center mb-6">
         <div className="flex items-center justify-center space-x-2 mb-2">
-          <span className="text-3xl font-bold text-gray-900">
+          <span className="text-2xl font-bold text-gray-900">
             ${service.price}
           </span>
           {service.originalPrice && (
             <>
-              <span className="text-lg text-gray-400 line-through">
+              <span className="text-lg text-gray-500 line-through">
                 ${service.originalPrice}
               </span>
-              <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-semibold">
-                -{discountPercentage}%
-              </span>
+              {discountPercentage > 0 && (
+                <span className="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">
+                  {discountPercentage}% OFF
+                </span>
+              )}
             </>
           )}
         </div>
-        <p className="text-sm text-gray-500 font-medium">per year</p>
+        <p className="text-gray-600 text-sm">per year</p>
       </div>
 
-      {/* CTA Button - Always at bottom */}
-      <div className="mt-auto">
-        <button
-          onClick={handleAddToCart}
-          disabled={isLoading || showSuccess}
-          className={`w-full font-semibold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 ${
-            showSuccess 
-              ? 'bg-green-600 text-white' 
-              : isLoading 
-                ? 'bg-blue-400 text-white cursor-not-allowed' 
-                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white'
-          }`}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Adding...</span>
-            </>
-          ) : showSuccess ? (
-            <>
-              <Check className="w-5 h-5" />
-              <span>Added to Cart!</span>
-            </>
-          ) : (
-            <>
-              <ShoppingCart className="w-5 h-5" />
-              <span>Add to Cart</span>
-            </>
-          )}
-        </button>
-      </div>
+      {/* Features */}
+      {service.features && service.features.length > 0 && (
+        <div className="mb-6">
+          <ul className="text-sm text-gray-600 space-y-1">
+            {service.features.slice(0, 3).map((feature, index) => (
+              <li key={index} className="flex items-center">
+                <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Add to Cart Button */}
+      <button
+        onClick={handleAddToCart}
+        disabled={isLoading || showSuccess}
+        className={`w-full font-bold py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 ${
+          showSuccess 
+            ? 'bg-green-600 text-white' 
+            : isLoading 
+              ? 'bg-gray-400 text-white cursor-not-allowed' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
+        }`}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="w-5 h-5 animate-spin" />
+            <span>Adding...</span>
+          </>
+        ) : showSuccess ? (
+          <>
+            <Check className="w-5 h-5" />
+            <span>Added to Cart!</span>
+          </>
+        ) : (
+          <>
+            <ShoppingCart className="w-5 h-5" />
+            <span>Add to Cart</span>
+          </>
+        )}
+      </button>
     </div>
   );
 }

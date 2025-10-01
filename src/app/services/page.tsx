@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { getServicesData } from '@/data/services';
 import { Service } from '@/types';
 import ServiceCard from '@/components/ServiceCard';
+import BundleSection from '@/components/BundleSection';
+import FAQSection from '@/components/FAQSection';
 import { Search, Filter } from 'lucide-react';
 
 export default function ServicesPage() {
@@ -52,7 +54,7 @@ export default function ServicesPage() {
             <p className="text-red-600">{error}</p>
             <button 
               onClick={() => window.location.reload()} 
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
             >
               Retry
             </button>
@@ -92,7 +94,7 @@ export default function ServicesPage() {
               placeholder="Search services..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
             />
           </div>
 
@@ -102,7 +104,7 @@ export default function ServicesPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white min-w-[150px] text-gray-900"
+              className="pl-10 pr-8 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white min-w-[150px] text-gray-900"
             >
               {categories.map(category => (
                 <option key={category} value={category}>
@@ -137,6 +139,12 @@ export default function ServicesPage() {
           </div>
         )}
       </div>
+
+      {/* Bundle & Save Section */}
+      <BundleSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
     </div>
   );
 }

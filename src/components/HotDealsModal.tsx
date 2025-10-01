@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X, Flame, Sparkles, Check, Copy, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, ChevronLeft, ChevronRight, Sparkles, Check } from 'lucide-react';
+import { useHotDealsStore } from '@/store/hotDealsStore';
 import { useCartStore } from '@/store/cartStore';
 import { getServicesData } from '@/data/services';
+import { getDealsData } from '@/data/deals';
 import { Service } from '@/types';
-import { getDealsData, Deal } from '@/data/deals';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface HotDealsModalProps {
   isOpen: boolean;
@@ -13,225 +16,215 @@ interface HotDealsModalProps {
 }
 
 export default function HotDealsModal({ isOpen, onClose }: HotDealsModalProps) {
-  const [services, setServices] = useState<Service[]>([]);
-  const [deals, setDeals] = useState<Deal[]>([]);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
-  const [dealServices, setDealServices] = useState<Service[]>([]);
-  const [copied, setCopied] = useState(false);
+  const [services, setServices] = useState<Service[]>([]);
+  const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const addItem = useCartStore((state) => state.addItem);
-
-  // Get current deal
-  const currentDeal = deals[currentDealIndex];
+  const { addItem } = useCartStore();
+  const router = useRouter();
 
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [servicesData, dealsData] = await Promise.all([
+          getServicesData(),
+          getDealsData()
+        ]);
+        setServices(servicesData);
+        setDeals(dealsData);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        // Fallback to mock data if database fails
+        setDeals([
+          {
+            id: 'deal-1',
+            name: 'Ultimate Streaming Bundle',
+            description: 'Get Netflix, Spotify, and YouTube Premium together',
+            serviceIds: ['1', '2', '4'],
+            originalPrice: 359.64,
+            dealPrice: 179.97,
+            discountPercentage: 50,
+            badge: 'BEST VALUE'
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (isOpen) {
       loadData();
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (currentDeal && services.length > 0) {
-      // Find services for current deal
-      const currentDealServices = services.filter(service => 
-        currentDeal.serviceIds.includes(service.id)
-      );
-      setDealServices(currentDealServices);
-    }
-  }, [currentDeal, services]);
+  const currentDeal = deals[currentDealIndex];
+  const dealServices = services.filter(service => 
+    currentDeal?.serviceIds?.includes(service.id)
+  );
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const [servicesData, dealsData] = await Promise.all([
-        getServicesData(),
-        getDealsData()
-      ]);
-      
-      setServices(servicesData);
-      setDeals(dealsData);
-      setCurrentDealIndex(0); // Reset to first deal
-    } catch (error) {
-      console.error('Error loading data:', error);
-    } finally {
-      setLoading(false);
-    }
+  const nextDeal = () => {
+    setCurrentDealIndex((prev) => (prev + 1) % deals.length);
   };
 
-  const navigateToDeal = (direction: 'prev' | 'next') => {
-    if (direction === 'prev') {
-      setCurrentDealIndex(prev => prev > 0 ? prev - 1 : deals.length - 1);
-    } else {
-      setCurrentDealIndex(prev => prev < deals.length - 1 ? prev + 1 : 0);
-    }
+  const prevDeal = () => {
+    setCurrentDealIndex((prev) => (prev - 1 + deals.length) % deals.length);
   };
 
   const goToDeal = (index: number) => {
     setCurrentDealIndex(index);
   };
 
-  // Calculate deal values
-  const originalTotal = dealServices.reduce((sum, service) => sum + (service.originalPrice || service.price), 0);
-  const dealPrice = currentDeal?.dealPrice || 0;
-  const savings = originalTotal - dealPrice;
-  const discountPercentage = currentDeal?.discountPercentage || 0;
-
-  const copyPromoCode = () => {
-    if (currentDeal?.promoCode) {
-      navigator.clipboard.writeText(currentDeal.promoCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const addDealServices = () => {
+  const handleGetDeal = () => {
+    // Add all services in the deal to cart
     dealServices.forEach(service => {
       addItem(service);
     });
+    
+    // Close modal and redirect to cart
     onClose();
-    // Redirect to cart
-    window.location.href = '/cart';
+    router.push('/cart');
   };
 
   if (!isOpen) return null;
 
-  if (loading || !currentDeal) {
-    return (
-      <div className="fixed inset-0 bg-white/20 backdrop-blur-md flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading amazing deals...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="fixed inset-0 bg-white/20 backdrop-blur-md flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
-        >
-          <X className="w-6 h-6" />
-        </button>
-
-        {/* Navigation Arrows */}
-        {deals.length > 1 && (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-200">
+        {loading ? (
+          <div className="flex items-center justify-center h-48">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2596be]"></div>
+          </div>
+        ) : (
           <>
+            {/* Close Button */}
             <button
-              onClick={() => navigateToDeal('prev')}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all z-10"
+              onClick={onClose}
+              className="absolute top-4 right-4 bg-white/95 hover:bg-white rounded-full p-1.5 shadow-lg transition-all z-10"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-600" />
+              <X className="w-4 h-4 text-gray-600" />
             </button>
-            <button
-              onClick={() => navigateToDeal('next')}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all z-10"
-            >
-              <ChevronRight className="w-5 h-5 text-gray-600" />
-            </button>
-          </>
-        )}
 
-        <div className="p-8">
-          {/* Deal Indicators */}
-          {deals.length > 1 && (
-            <div className="flex justify-center space-x-2 mb-6">
-              {deals.map((_, index) => (
+            {/* Navigation Arrows */}
+            {deals.length > 1 && (
+              <>
                 <button
-                  key={index}
-                  onClick={() => goToDeal(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    index === currentDealIndex 
-                      ? 'bg-purple-600 w-6' 
-                      : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+                  onClick={prevDeal}
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-white/95 hover:bg-white rounded-full p-1.5 shadow-lg transition-all z-10"
+                >
+                  <ChevronLeft className="w-4 h-4 text-gray-600" />
+                </button>
+                <button
+                  onClick={nextDeal}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white/95 hover:bg-white rounded-full p-1.5 shadow-lg transition-all z-10"
+                >
+                  <ChevronRight className="w-4 h-4 text-gray-600" />
+                </button>
+              </>
+            )}
 
-          {/* Header */}
-          <div className="text-center mb-6">
-            <div className="flex items-center justify-center space-x-2 mb-2">
-              <Flame className="w-8 h-8 text-red-500 animate-bounce" />
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-red-500 to-purple-600 bg-clip-text text-transparent">
-                {currentDeal.badge}
-              </h2>
-              <Sparkles className="w-8 h-8 text-purple-500 animate-pulse" />
-            </div>
-            <p className="text-gray-600 text-sm">Limited Time Offer!</p>
-          </div>
-
-          {/* Deal Content */}
-          <div className="text-center mb-6">
-            <div className="flex justify-center space-x-4 mb-4">
-              {dealServices.map((service, index) => (
-                <div key={service.id} className="flex flex-col items-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-2">
-                    <span className="text-white font-bold text-lg">{service.name.charAt(0)}</span>
-                  </div>
-                  <span className="text-sm font-medium text-gray-700">{service.name}</span>
+            <div className="p-6">
+              {/* Deal Indicators */}
+              {deals.length > 1 && (
+                <div className="flex justify-center space-x-2 mb-4">
+                  {deals.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentDealIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        index === currentDealIndex
+                          ? 'bg-[#2596be]'
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
 
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              {currentDeal.name}
-            </h3>
-            <div className="flex items-center justify-center space-x-2 mb-2">
-              <span className="text-2xl font-bold text-green-600">{discountPercentage}% OFF</span>
-              <span className="text-lg text-gray-500 line-through">${originalTotal.toFixed(2)}/year</span>
-            </div>
-            <p className="text-2xl font-bold text-purple-600">Only ${dealPrice.toFixed(2)}/year!</p>
-            <p className="text-sm text-gray-600 mt-1">Save ${savings.toFixed(2)} annually!</p>
-            
-            {/* Features */}
-            <div className="mt-4 text-left">
-              <ul className="text-sm text-gray-600 space-y-1">
-                {currentDeal.features.map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    <Check className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Promo Code */}
-          <div className="mb-6">
-            <div className="bg-gray-50 rounded-lg p-3 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500 mb-1">Promo Code</p>
-                <p className="font-mono font-bold text-gray-800">{currentDeal.promoCode}</p>
+              {/* Header */}
+              <div className="text-center mb-6">
+                <div className="flex items-center justify-center mb-3">
+                  <Sparkles className="w-5 h-5 text-[#2596be] mr-2" />
+                  <h2 className="text-xl font-bold text-gray-900">Hot Deal</h2>
+                  <Sparkles className="w-5 h-5 text-[#2596be] ml-2" />
+                </div>
+                
+                {currentDeal && (
+                  <>
+                    <div className="inline-block bg-gradient-to-r from-[#2596be] to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold mb-3">
+                      {currentDeal.badge}
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                      {currentDeal.name}
+                    </h3>
+                  </>
+                )}
               </div>
+
+              {/* Services */}
+              {dealServices.length > 0 && (
+                <div className="mb-6">
+                  <div className="flex justify-center space-x-4 mb-4">
+                    {dealServices.map((service) => (
+                      <div key={service.id} className="flex flex-col items-center">
+                        <div className="w-12 h-12 relative flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 mb-2">
+                          <Image 
+                            src={service.icon} 
+                            alt={`${service.name} logo`}
+                            width={32}
+                            height={32}
+                            className="object-contain"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                              if (nextElement) {
+                                nextElement.style.display = 'block';
+                              }
+                            }}
+                          />
+                          <div className="text-lg hidden">🔧</div>
+                        </div>
+                        <span className="text-xs font-medium text-gray-700 text-center">
+                          {service.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Pricing */}
+              {currentDeal && (
+                <div className="bg-gradient-to-br from-[#2596be]/5 to-blue-50 rounded-xl p-4 mb-6 border border-[#2596be]/20">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center space-x-3 mb-2">
+                      <span className="text-2xl font-bold text-gray-900">
+                        ${currentDeal.dealPrice}
+                      </span>
+                      <span className="text-lg text-gray-500 line-through">
+                        ${currentDeal.originalPrice}
+                      </span>
+                    </div>
+                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold inline-block mb-2">
+                      {currentDeal.discountPercentage}% OFF
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Save ${(currentDeal.originalPrice - currentDeal.dealPrice).toFixed(2)}/year
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Button */}
               <button
-                onClick={copyPromoCode}
-                className="flex items-center space-x-1 bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-2 rounded-lg transition-colors"
+                onClick={handleGetDeal}
+                className="w-full bg-gradient-to-r from-[#2596be] to-blue-600 text-white py-3 px-4 rounded-xl font-bold hover:from-[#2596be]/90 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                <span className="text-sm">{copied ? 'Copied!' : 'Copy'}</span>
+                Get This Deal
               </button>
             </div>
-          </div>
-
-          {/* Action Button */}
-          <button
-            onClick={addDealServices}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
-          >
-            🚀 Get This Deal Now!
-          </button>
-
-          <p className="text-xs text-gray-500 text-center mt-3">
-            Valid until {currentDeal.validUntil.toLocaleDateString()} • No commitment required
-          </p>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

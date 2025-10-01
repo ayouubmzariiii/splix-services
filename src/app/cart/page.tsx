@@ -194,17 +194,17 @@ export default function CartPage() {
                 {/* Hot Deal Discount Section */}
                 {hasHotDealCombo() && (
                   <div className="mb-4">
-                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 shadow-sm">
+                    <div className="bg-gradient-to-r from-blue-50 to-[#2596be]/10 border border-[#2596be]/30 rounded-xl p-4 shadow-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <span className="text-lg">🔥</span>
-                          <span className="text-sm font-bold text-amber-800">Hot Deal Active!</span>
+                          <span className="text-sm font-bold text-[#2596be]">Hot Deal Active!</span>
                         </div>
-                        <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                        <div className="bg-gradient-to-r from-[#2596be] to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
                           Save ${getHotDealDiscount().toFixed(2)}
                         </div>
                       </div>
-                      <p className="text-xs text-amber-700 mt-1 ml-6">
+                      <p className="text-xs text-[#2596be]/80 mt-1 ml-6">
                         Netflix + Spotify combo discount applied
                       </p>
                     </div>
@@ -219,7 +219,7 @@ export default function CartPage() {
                   </div>
                   
                   {hasHotDealCombo() && (
-                    <div className="flex justify-between items-center text-orange-600">
+                    <div className="flex justify-between items-center text-[#2596be]">
                       <span className="font-medium text-sm">Hot Deal Discount</span>
                       <span className="font-semibold text-sm">-${getHotDealDiscount().toFixed(2)}</span>
                     </div>

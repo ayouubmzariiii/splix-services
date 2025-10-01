@@ -342,7 +342,7 @@ export default function CheckoutPage() {
               </div>
               
               {hasHotDealCombo() && (
-                <div className="flex justify-between items-center mb-2 text-orange-600">
+                <div className="flex justify-between items-center mb-2" style={{ color: '#2596be' }}>
                   <span className="font-medium">Hot Deal Discount</span>
                   <span className="font-semibold">-${getHotDealDiscount().toFixed(2)}</span>
                 </div>
