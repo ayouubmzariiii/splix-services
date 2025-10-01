@@ -67,7 +67,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
 
       {/* Pricing */}
       <div className="text-center mb-6">
-        <div className="flex items-center justify-center space-x-2 mb-2">
+        <div className="flex items-center justify-center space-x-2 mb-1">
           <span className="text-2xl font-bold text-gray-900">
             ${service.price}
           </span>
@@ -84,7 +84,6 @@ export default function ServiceCard({ service }: ServiceCardProps) {
             </>
           )}
         </div>
-        <p className="text-gray-600 text-sm">per year</p>
       </div>
 
       {/* Features */}

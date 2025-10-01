@@ -6,33 +6,27 @@ export default function BundleSection() {
   const bundleData = [
     {
       service: 'Spotify Premium',
-      passifyPrice: '$34.99',
-      regularPrice: '$119.88 - $143.88',
-      savings: '+76%'
-    },
-    {
-      service: 'YouTube Premium',
-      passifyPrice: '$57.99',
-      regularPrice: '$119.88 - $167.88',
+      passifyPrice: '$41.99',
+      regularPrice: '$119.88',
       savings: '+65%'
     },
     {
-      service: 'Apple Music',
-      passifyPrice: '$41.99',
-      regularPrice: '$109.89 - $131.88',
-      savings: '+68%'
-    },
-    {
       service: 'Discord Nitro',
-      passifyPrice: '$53.99',
-      regularPrice: '$99.99 - $119.88',
-      savings: '+55%'
+      passifyPrice: '$53.00',
+      regularPrice: '$100.00',
+      savings: '+47%'
     },
     {
       service: 'Netflix Premium',
-      passifyPrice: '$49.99',
-      regularPrice: '$239.88 - $299.88',
-      savings: '+83%'
+      passifyPrice: '$59.99',
+      regularPrice: '$300.00',
+      savings: '+80%'
+    },
+    {
+      service: 'Canva Pro',
+      passifyPrice: '$79.99',
+      regularPrice: '$120.00',
+      savings: '+33%'
     }
   ];
 
