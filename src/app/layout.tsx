@@ -30,7 +30,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <DiscordButton discordInvite="https://discord.gg/MxZu6uqM" />
+          <DiscordButton discordInvite="https://discord.gg/jMZvhhP5KT" />
           <WhatsAppButton phoneNumber="212682969910" />
         </HotDealsProvider>
       </body>

@@ -6,20 +6,14 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CreditCard, Lock, ArrowLeft } from 'lucide-react';
+import { Lock, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 const checkoutSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  cardNumber: z.string().min(16, 'Card number must be 16 digits').max(19, 'Card number is too long'),
-  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Please enter MM/YY format'),
-  cvv: z.string().min(3, 'CVV must be 3 digits').max(4, 'CVV must be 3-4 digits'),
-  billingAddress: z.string().min(5, 'Please enter a valid address'),
-  city: z.string().min(2, 'Please enter a valid city'),
-  zipCode: z.string().min(5, 'Please enter a valid zip code'),
-  country: z.string().min(2, 'Please select a country'),
+  phoneNumber: z.string().min(8, 'Please enter a valid phone number'),
 });
 
 type CheckoutForm = z.infer<typeof checkoutSchema>;
@@ -62,11 +56,26 @@ export default function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutForm) => {
     setIsProcessing(true);
-    
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Clear cart and redirect to success page
+
+    // Build WhatsApp message with order details
+    const supportWhatsAppNumber = '212682969910';
+  const itemsList = items
+      .map((item) => {
+        const discounted = hasHotDealCombo() && item.service.id === '2' && item.addedViaModal;
+        const status = discounted ? '(discount applied)' : '(no discount)';
+        return `- ${item.service.name} x${item.quantity} ${status}`;
+      })
+      .join('\n');
+    const dealLine = hasHotDealCombo()
+      ? 'Deal: Netflix + Spotify (Netflix -25%)'
+      : 'Deal: Standard order';
+    const message = `Order Request via Website\nName: ${data.firstName} ${data.lastName}\nEmail: ${data.email}\nPhone: ${data.phoneNumber}\n${dealLine}\nItems:\n${itemsList}\nTotal: $${getDiscountedTotal().toFixed(2)}/year`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${supportWhatsAppNumber}?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+
+    // Clear cart and optionally redirect to a success/thank-you page
     clearCart();
     router.push('/checkout/success');
   };
@@ -124,9 +133,9 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Billing Information */}
+              {/* Basic Details */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Billing Information</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Details</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -160,124 +169,17 @@ export default function CheckoutPage() {
 
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Address
+                    Phone Number
                   </label>
                   <input
-                    type="text"
-                    {...register('billingAddress')}
+                    type="tel"
+                    {...register('phoneNumber')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                    placeholder="123 Main Street"
+                    placeholder="e.g. +1 555-123-4567"
                   />
-                  {errors.billingAddress && (
-                    <p className="mt-1 text-sm text-red-600">{errors.billingAddress.message}</p>
+                  {errors.phoneNumber && (
+                    <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>
                   )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      {...register('city')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                    />
-                    {errors.city && (
-                      <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Zip Code
-                    </label>
-                    <input
-                      type="text"
-                      {...register('zipCode')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                    />
-                    {errors.zipCode && (
-                      <p className="mt-1 text-sm text-red-600">{errors.zipCode.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Country
-                    </label>
-                    <select
-                      {...register('country')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                    >
-                      <option value="">Select Country</option>
-                      <option value="US">United States</option>
-                      <option value="CA">Canada</option>
-                      <option value="UK">United Kingdom</option>
-                      <option value="AU">Australia</option>
-                    </select>
-                    {errors.country && (
-                      <p className="mt-1 text-sm text-red-600">{errors.country.message}</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Information */}
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  Payment Information
-                </h2>
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Card Number
-                  </label>
-                  <input
-                    type="text"
-                    {...register('cardNumber')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                    placeholder="1234 5678 9012 3456"
-                    maxLength={19}
-                    onChange={(e) => {
-                      e.target.value = formatCardNumber(e.target.value);
-                    }}
-                  />
-                  {errors.cardNumber && (
-                    <p className="mt-1 text-sm text-red-600">{errors.cardNumber.message}</p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Expiry Date
-                    </label>
-                    <input
-                      type="text"
-                      {...register('expiryDate')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                      placeholder="MM/YY"
-                      maxLength={5}
-                    />
-                    {errors.expiryDate && (
-                      <p className="mt-1 text-sm text-red-600">{errors.expiryDate.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      CVV
-                    </label>
-                    <input
-                      type="text"
-                      {...register('cvv')}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white"
-                      placeholder="123"
-                      maxLength={4}
-                    />
-                    {errors.cvv && (
-                      <p className="mt-1 text-sm text-red-600">{errors.cvv.message}</p>
-                    )}
-                  </div>
                 </div>
               </div>
 
@@ -290,12 +192,12 @@ export default function CheckoutPage() {
                 {isProcessing ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Processing...
+                    Sending...
                   </>
                 ) : (
                   <>
                     <Lock className="w-5 h-5 mr-2" />
-                    Complete Order - ${total.toFixed(2)}/year
+                    Send Order via WhatsApp - ${getDiscountedTotal().toFixed(2)}/year
                   </>
                 )}
               </button>
@@ -329,7 +231,11 @@ export default function CheckoutPage() {
                     <p className="text-sm text-gray-700 font-medium">Quantity: {item.quantity}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-gray-900">${(item.service.price * item.quantity).toFixed(2)}/year</p>
+                    {hasHotDealCombo() && item.service.id === '2' && item.addedViaModal ? (
+                      <span className="text-xs font-medium" style={{ color: '#2596be' }}>Discount applied</span>
+                    ) : (
+                      <span className="text-xs text-gray-500">No discount</span>
+                    )}
                   </div>
                 </div>
               ))}

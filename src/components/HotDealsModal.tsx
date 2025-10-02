@@ -32,7 +32,35 @@ export default function HotDealsModal({ isOpen, onClose }: HotDealsModalProps) {
           getDealsData()
         ]);
         setServices(servicesData);
-        setDeals(dealsData);
+
+        // Adjust Spotify + Netflix combo pricing: Spotify at our price + Netflix with 25% off
+        const spotify = servicesData.find(s => s.id === '1');
+        const netflix = servicesData.find(s => s.id === '2');
+        const adjustedDeals = (spotify && netflix)
+          ? dealsData.map((deal) => {
+              const isSpotifyNetflixCombo = Array.isArray(deal.serviceIds)
+                && deal.serviceIds.length === 2
+                && deal.serviceIds.includes('1')
+                && deal.serviceIds.includes('2');
+
+              if (isSpotifyNetflixCombo) {
+                const originalTotal = (spotify.originalPrice ?? spotify.price) + (netflix.originalPrice ?? netflix.price);
+                const computedDealPrice = Number((spotify.price + netflix.price * 0.75).toFixed(2));
+                const computedDiscount = Math.round(((originalTotal - computedDealPrice) / originalTotal) * 100);
+                return {
+                  ...deal,
+                  name: deal.name || 'Netflix + Spotify Combo',
+                  description: deal.description || 'Spotify at our price + Netflix at 25% off',
+                  originalPrice: originalTotal,
+                  dealPrice: computedDealPrice,
+                  discountPercentage: computedDiscount,
+                };
+              }
+              return deal;
+            })
+          : dealsData;
+
+        setDeals(adjustedDeals);
       } catch (error) {
         console.error('Error loading data:', error);
         // Fallback to mock data if database fails
@@ -84,7 +112,8 @@ export default function HotDealsModal({ isOpen, onClose }: HotDealsModalProps) {
   const handleGetDeal = () => {
     // Add all services in the deal to cart
     dealServices.forEach(service => {
-      addItem(service);
+      // Mark items as added via Hot Deals to qualify for combo pricing
+      addItem(service, true);
     });
     
     // Close modal and redirect to cart

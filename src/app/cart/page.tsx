@@ -5,6 +5,7 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, ArrowRight } from 'lucide-
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { getServices } from '@/lib/firestore';
 
 export default function CartPage() {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -17,12 +18,31 @@ export default function CartPage() {
     getItemCount,
     hasHotDealCombo,
     getHotDealDiscount,
-    getDiscountedTotal
+    getDiscountedTotal,
+    syncWithDatabase
   } = useCartStore();
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  // Sync cart item prices with database once hydrated
+  useEffect(() => {
+    const syncPrices = async () => {
+      try {
+        const latest = await getServices();
+        if (Array.isArray(latest) && latest.length > 0) {
+          syncWithDatabase(latest);
+        }
+      } catch (error) {
+        console.error('Failed to sync cart prices with database', error);
+      }
+    };
+
+    if (isHydrated && items.length > 0) {
+      syncPrices();
+    }
+  }, [isHydrated, items.length, syncWithDatabase]);
 
   if (!isHydrated) {
     return (
@@ -183,8 +203,12 @@ export default function CartPage() {
                     <span className="text-gray-700 font-medium text-sm">
                       {item.service.name} × {item.quantity}
                     </span>
-                    <span className="font-semibold text-gray-900 text-sm">
-                      ${(item.service.price * item.quantity).toFixed(2)}
+                    <span className="text-xs font-medium">
+                      {hasHotDealCombo() && item.service.id === '2' && item.addedViaModal ? (
+                        <span className="text-[#2596be]">Discount applied</span>
+                      ) : (
+                        <span className="text-gray-500">No discount</span>
+                      )}
                     </span>
                   </div>
                 ))}

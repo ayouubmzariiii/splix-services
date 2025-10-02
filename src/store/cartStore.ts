@@ -18,6 +18,7 @@ interface CartStore extends Cart {
   getDiscountedTotal: () => number;
   hasHotDealCombo: () => boolean;
   getHotDealDiscount: () => number;
+  syncWithDatabase: (latestServices: Service[]) => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -101,20 +102,11 @@ export const useCartStore = create<CartStore>()(
       getHotDealDiscount: () => {
         const { hasHotDealCombo, items } = get();
         if (hasHotDealCombo()) {
-          // Calculate discount based on the difference between original prices and current prices
-          const netflixItem = items.find(item => item.service.id === '2');
-          const spotifyItem = items.find(item => item.service.id === '1');
-          
-          if (netflixItem && spotifyItem) {
-            const netflixOriginal = netflixItem.service.originalPrice || netflixItem.service.price;
-            const spotifyOriginal = spotifyItem.service.originalPrice || spotifyItem.service.price;
-            const currentNetflixPrice = netflixItem.service.price * netflixItem.quantity;
-            const currentSpotifyPrice = spotifyItem.service.price * spotifyItem.quantity;
-            const originalTotal = (netflixOriginal * netflixItem.quantity) + (spotifyOriginal * spotifyItem.quantity);
-            const currentTotal = currentNetflixPrice + currentSpotifyPrice;
-            
-            // Return the savings (original - current)
-            return Math.max(0, originalTotal - currentTotal);
+          // Apply 25% off Netflix when combo added via Hot Deals
+          const netflixItem = items.find(item => item.service.id === '2' && item.addedViaModal);
+          if (netflixItem) {
+            const discountPerUnit = netflixItem.service.price * 0.25;
+            return discountPerUnit * netflixItem.quantity;
           }
         }
         return 0;
@@ -122,8 +114,27 @@ export const useCartStore = create<CartStore>()(
 
       getDiscountedTotal: () => {
         const { total } = get();
-        // The total already includes discounted prices, so just return it
-        return total;
+        // Subtract hot deal discount from subtotal for final total
+        return total - get().getHotDealDiscount();
+      },
+
+      // Sync cart item prices and original prices with latest services from database
+      syncWithDatabase: (latestServices: Service[]) => {
+        const updatedItems = get().items.map(item => {
+          const latest = latestServices.find(s => s.id === item.service.id);
+          if (!latest) return item;
+          return {
+            ...item,
+            service: {
+              ...item.service,
+              ...latest
+            }
+          };
+        });
+
+        const newTotal = updatedItems.reduce((sum, item) => sum + (item.service.price * item.quantity), 0);
+
+        set({ items: updatedItems, total: newTotal });
       }
     }),
     {
