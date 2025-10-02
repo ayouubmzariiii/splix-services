@@ -150,9 +150,9 @@ export const ReviewService = {
 };
 
 // Services operations
-export const getServices = async () => {
+export const getServices = async (): Promise<Service[]> => {
   const result = await FirestoreService.getCollection(Collections.SERVICES);
-  return result.success ? result.data : [];
+  return result.success ? (result.data as Service[]) : [];
 };
 
 // Deals operations
@@ -185,3 +185,4 @@ export const DealsService = {
 };
 
 export { db };
+import { Service } from '@/types';

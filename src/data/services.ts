@@ -13,19 +13,19 @@ export async function getServicesData(): Promise<Service[]> {
   }
 
   try {
-    const firestoreServices = await getServices();
+    const firestoreServicesRaw = (await getServices()) as unknown as Record<string, unknown>[];
     
     // Check if firestoreServices is valid before mapping
-    if (!firestoreServices || !Array.isArray(firestoreServices)) {
+    if (!firestoreServicesRaw || !Array.isArray(firestoreServicesRaw)) {
       throw new Error('Invalid services data received from Firestore');
     }
     
     // Transform Firestore data to match the Service interface
-    servicesCache = firestoreServices.map((service: Record<string, unknown>) => ({
+    servicesCache = firestoreServicesRaw.map((service: Record<string, unknown>) => ({
       id: service.id as string,
       name: service.name as string,
       description: service.description as string,
-      price: service.discountedPrice as number,
+      price: (service.discountedPrice as number) ?? (service.price as number),
       originalPrice: service.originalPrice as number,
       icon: service.icon as string,
       category: service.category as string,
