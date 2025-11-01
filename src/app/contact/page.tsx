@@ -66,7 +66,11 @@ export default function ContactPage() {
                   <Mail className="w-6 h-6 text-blue-600 mt-1" />
                   <div>
                     <h3 className="font-medium text-gray-900">Email</h3>
-                    <p className="text-gray-600">support@passify.com</p>
+                    <p className="text-gray-600">
+                      <a href="mailto:passify.digital@gmail.com" className="text-blue-600 hover:text-blue-700">
+                        passify.digital@gmail.com
+                      </a>
+                    </p>
                     <p className="text-sm text-gray-500">We&apos;ll respond within 24 hours</p>
                   </div>
                 </div>

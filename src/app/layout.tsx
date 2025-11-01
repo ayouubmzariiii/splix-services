@@ -52,7 +52,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <DiscordButton discordInvite="https://discord.gg/jMZvhhP5KT" />
-          <WhatsAppButton phoneNumber="212682969910" />
+          <WhatsAppButton phoneNumber="212682282716" />
         </HotDealsProvider>
       </body>
     </html>
