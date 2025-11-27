@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, Sparkles, Check } from 'lucide-react';
-import { useHotDealsStore } from '@/store/hotDealsStore';
+import { X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { useCartStore } from '@/store/cartStore';
 import { getServicesData } from '@/data/services';
 import { getDealsData, Deal } from '@/data/deals';
@@ -105,9 +104,7 @@ export default function HotDealsModal({ isOpen, onClose }: HotDealsModalProps) {
     setCurrentDealIndex((prev) => (prev - 1 + deals.length) % deals.length);
   };
 
-  const goToDeal = (index: number) => {
-    setCurrentDealIndex(index);
-  };
+  // Removed unused goToDeal function to satisfy ESLint
 
   const handleGetDeal = () => {
     // Add all services in the deal to cart

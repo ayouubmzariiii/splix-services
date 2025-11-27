@@ -11,7 +11,6 @@ import {
   orderBy, 
   limit,
   Timestamp,
-  DocumentData,
   QueryConstraint
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
