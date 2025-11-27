@@ -34,24 +34,21 @@ async function cleanupDeals() {
       const dealData = dealDoc.data();
       const dealName = dealData.name || dealData.id || 'Unknown';
       
-      // Check if this is the Netflix-Spotify combo deal
-      const isNetflixSpotifyCombo = (
-        dealName.toLowerCase().includes('netflix') && dealName.toLowerCase().includes('spotify')
-      ) || (
-        dealName.toLowerCase().includes('entertainment') && dealName.toLowerCase().includes('combo')
-      ) || (
-        dealData.serviceIds && 
-        dealData.serviceIds.includes('1') && // Spotify
-        dealData.serviceIds.includes('2')    // Netflix
+      // Targeted deletion: remove specific deals only
+      const shouldDelete = (
+        dealData.id === 'productivity-suite' ||
+        dealData.id === 'student-special' ||
+        dealName === 'Productivity Master Bundle' ||
+        dealName === 'Student Essentials Pack'
       );
-      
-      if (isNetflixSpotifyCombo) {
-        console.log(`✅ Keeping deal: "${dealName}"`);
-        keptCount++;
-      } else {
+
+      if (shouldDelete) {
         console.log(`🗑️  Deleting deal: "${dealName}"`);
         await deleteDoc(doc(db, 'deals', dealDoc.id));
         deletedCount++;
+      } else {
+        console.log(`✅ Keeping deal: "${dealName}"`);
+        keptCount++;
       }
     }
     

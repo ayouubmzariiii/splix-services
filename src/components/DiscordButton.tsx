@@ -6,7 +6,7 @@ interface DiscordButtonProps {
   discordInvite?: string;
 }
 
-export default function DiscordButton({ discordInvite = "https://discord.gg/your-server" }: DiscordButtonProps) {
+export default function DiscordButton({ discordInvite = "https://discord.gg/yQjnqrQu" }: DiscordButtonProps) {
   const handleClick = () => {
     window.open(discordInvite, '_blank', 'noopener,noreferrer');
   };

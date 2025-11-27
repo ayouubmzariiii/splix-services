@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, addDoc, getDocs } = require("firebase/firestore");
+const { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } = require("firebase/firestore");
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,6 +19,70 @@ const db = getFirestore(app);
 
 // Sample deals data
 const dealsData = [
+  {
+    id: 'spotify-buy-2-get-3rd-free',
+    name: 'Buy 2 Spotify Accounts → 3rd Free',
+    description: 'Purchase 2 Spotify Premium accounts and get the 3rd one absolutely free (per single transaction)',
+    type: 'single',
+    serviceIds: ['1'], // Spotify Premium service ID
+    originalPrice: 179.97, // 3 accounts at $59.99 each
+    dealPrice: 82.00, // Price equals two Netflix accounts (41 * 2)
+    savings: 97.97,
+    discountPercentage: 54,
+    promoCode: 'SPOTIFY3RD',
+    validUntil: new Date('2025-12-31'),
+    isActive: true,
+    priority: 1,
+    badge: '🎵 SPOTIFY SPECIAL',
+    features: [
+      'Get 3 Spotify Premium accounts',
+      'Pay for only 2 accounts',
+      'All accounts fully activated',
+      'Perfect for families or friends',
+      'Ad-free music streaming',
+      'Offline downloads included'
+    ],
+    terms: [
+      'Valid per single transaction only',
+      'All 3 accounts must be purchased together',
+      'Cannot be combined with other offers',
+      'Accounts delivered within 24 hours'
+    ],
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    id: 'spotify-family-pack-5-accounts',
+    name: 'Spotify Family Pack — 5 Accounts for $150',
+    description: 'Get 5 Spotify Premium accounts for just $150 - perfect for families and groups',
+    type: 'single',
+    serviceIds: ['1'], // Spotify Premium service ID
+    originalPrice: 299.95, // 5 accounts at $59.99 each
+    dealPrice: 150.00,
+    savings: 149.95,
+    discountPercentage: 50,
+    promoCode: 'FAMILY150',
+    validUntil: new Date('2025-12-31'),
+    isActive: true,
+    priority: 2,
+    badge: '👨‍👩‍👧‍👦 FAMILY PACK',
+    features: [
+      '5 Spotify Premium accounts included',
+      'Save $149.95 compared to individual purchases',
+      'Perfect for families and friend groups',
+      'All accounts fully activated',
+      'Ad-free music for everyone',
+      'Individual playlists and recommendations'
+    ],
+    terms: [
+      'All 5 accounts must be purchased together',
+      'Cannot be split into separate orders',
+      'Accounts delivered within 24 hours',
+      'Each account works independently'
+    ],
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
   {
     id: 'netflix-spotify-combo',
     name: 'Ultimate Entertainment Combo',
@@ -109,94 +173,42 @@ const dealsData = [
     createdAt: new Date(),
     updatedAt: new Date()
   },
-  {
-    id: 'productivity-suite',
-    name: 'Productivity Master Bundle',
-    description: 'Microsoft Office 365 + Grammarly Premium + Dropbox Plus',
-    type: 'combo',
-    serviceIds: ['5', '9', '10'], // Office 365, Grammarly, Dropbox
-    originalPrice: 419.86,
-    dealPrice: 299.99,
-    savings: 119.87,
-    discountPercentage: 29,
-    promoCode: 'PRODUCTIVE29',
-    validUntil: new Date('2025-08-31'),
-    isActive: true,
-    priority: 4,
-    badge: '💼 BUSINESS DEAL',
-    features: [
-      'Full Microsoft Office suite',
-      'Advanced grammar checking',
-      '2TB secure cloud storage',
-      'Professional collaboration tools'
-    ],
-    terms: [
-      'Business and personal use allowed',
-      'Annual subscription required',
-      'All apps must be activated within 30 days',
-      'Support included for all services'
-    ],
-    createdAt: new Date(),
-    updatedAt: new Date()
-  },
-  {
-    id: 'student-special',
-    name: 'Student Essentials Pack',
-    description: 'Special bundle for students with educational discounts',
-    type: 'combo',
-    serviceIds: ['1', '3', '9'], // Spotify, Adobe, Grammarly
-    originalPrice: 449.86,
-    dealPrice: 199.99,
-    savings: 249.87,
-    discountPercentage: 56,
-    promoCode: 'STUDENT56',
-    validUntil: new Date('2025-12-31'),
-    isActive: true,
-    priority: 5,
-    badge: '🎓 STUDENT DEAL',
-    features: [
-      'Spotify Premium for students',
-      'Adobe Creative Cloud education',
-      'Grammarly Premium writing assistant',
-      'Exclusive student pricing'
-    ],
-    terms: [
-      'Valid student ID required',
-      'Annual verification needed',
-      'Educational use only',
-      'Cannot be transferred'
-    ],
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }
+  
 ];
 
 async function uploadDeals() {
   try {
     console.log('🚀 Starting deals upload to Firestore...');
     
-    // Check if deals collection already has data
+    // Upsert logic: update existing deals by id, add new ones otherwise
     const dealsCollection = collection(db, 'deals');
-    const existingDeals = await getDocs(dealsCollection);
+    let updatedCount = 0;
+    let uploadedCount = 0;
     
-    if (!existingDeals.empty) {
-      console.log('⚠️  Deals collection already contains data. Skipping upload to avoid duplicates.');
-      console.log(`Found ${existingDeals.size} existing deals.`);
-      return;
-    }
-
-    // Upload each deal
     for (const deal of dealsData) {
       try {
-        const docRef = await addDoc(dealsCollection, deal);
-        console.log(`✅ Deal "${deal.name}" uploaded with ID: ${docRef.id}`);
+        // Find existing doc by custom id field
+        const q = query(dealsCollection, where('id', '==', deal.id));
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+          // Update the first matching document
+          const existingDoc = snapshot.docs[0];
+          await updateDoc(doc(db, 'deals', existingDoc.id), deal);
+          console.log(`🔄 Updated existing deal: "${deal.name}" (doc ${existingDoc.id})`);
+          updatedCount++;
+        } else {
+          const docRef = await addDoc(dealsCollection, deal);
+          console.log(`✅ Deal "${deal.name}" uploaded with ID: ${docRef.id}`);
+          uploadedCount++;
+        }
       } catch (error) {
         console.error(`❌ Error uploading deal "${deal.name}":`, error);
       }
     }
 
-    console.log('🎉 All deals uploaded successfully!');
-    console.log(`📊 Total deals uploaded: ${dealsData.length}`);
+    console.log('🎉 Deals upload completed!');
+    console.log(`📊 New deals uploaded: ${uploadedCount}`);
+    console.log(`🔄 Existing deals updated: ${updatedCount}`);
     
   } catch (error) {
     console.error('💥 Error during deals upload:', error);
